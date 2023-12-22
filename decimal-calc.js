@@ -1,37 +1,3 @@
-function numberText( value , { toFixed , doFormat = true , show0 = false } = {} ){
-	value = ( +value ).toFiniteNumber()
-	let decimalString = value.toString()
-	if( /e/.test( decimalString ) ){
-		console.info( value , "超过正常数字, 无法格式化")
-		return ""
-	}
-
-	decimalString = decimalString.replace( /^-?\d+\.?/ , '' )
-
-	let intString = Math.trunc( value ), 
-	doFixed = isFinite( toFixed ) && toFixed >= 0 && decimalString.length != toFixed
-
-	if( doFixed ){
-		decimalString = decimalString.substr( 0 , toFixed )
-		if( decimalString.length < toFixed ) decimalString = decimalString.padEnd( toFixed , 0 )
-	}
-	if( decimalString ){
-		decimalString = "." + decimalString
-	}
-
-	if( doFormat && intString.toString().length > 3 ) intString = intString.toLocaleString()
-	
-	let v1 = intString + decimalString , v2 = Number( v1 )
-	if( v2 == 0 ){
-		if( !show0 ){
-			return ""
-		}
-	}
-	else if( intString == 0 && value < 0 ){
-		v1 = "-"+v1
-	}
-	return v1
-}
 //用于高精度浮点型运算扩展
 (function(){
 	function exponential( a ){
@@ -128,9 +94,6 @@ function numberText( value , { toFixed , doFormat = true , show0 = false } = {} 
 		a = Math.trunc( int_part + "e" + (+float_part + s ) )
 		let [ int_part2 , float_part2 ] = a.toExponential().split("e")
 		return +( int_part2 + "e" + ( +float_part2 - s ))
-	}
-	Number.prototype.toNumberText = function(){
-		return numberText( this , ...arguments )
 	}
 	for( let k of [ 'toFiniteNumber' , '*' , '/' , '+' , '-' , 'round' , 'ceil' , 'floor' , 'roundDown' ]){
 		String.prototype[ k ] = function(){
